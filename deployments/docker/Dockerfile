@@ -31,8 +31,6 @@ RUN cp /go/bin/protoc-gen-gofast /usr/local/bin/
 
 RUN echo $SVC_NAME
 
-# This image builds the weavaite server
-FROM build_base AS server_builder
 ARG SVC_NAME
 # Here we copy the rest of the source code
 COPY . .
@@ -40,6 +38,4 @@ COPY . .
 RUN make $SVC_NAME \
     && mv build/gokitconsul-$SVC_NAME /exe
 
-FROM scratch
-COPY --from=server_builder /exe /
 ENTRYPOINT ["/exe"]

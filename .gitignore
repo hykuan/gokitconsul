@@ -75,3 +75,5 @@ fabric.properties
 /build/
 /deployments/docker/extra/
 /deployments/docker/esdata/
+
+.idea/*
