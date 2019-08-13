@@ -31,7 +31,7 @@ spec:
           value: "8500"
         - name: QS_ZIPKIN_V2_URL
           value: http://zipkin:9411/api/v2/spans
-        image: hykuan1126/gokitconsul-addsvc:latest
+        image: {{ .Values.addsvcImage }}
         name: gokitconsul-addsvc
         resources: {}
       restartPolicy: Always

@@ -18,5 +18,6 @@ spec:
     targetPort: 8001
   selector:
     io.kompose.service: gateway
+  type: LoadBalancer
 status:
   loadBalancer: {}

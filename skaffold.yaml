@@ -1,25 +1,28 @@
 apiVersion: skaffold/v1alpha4
 kind: Config
-#build:
-#  artifacts:
-#  - image: cage1016/gokitconsul-addsvc
-#    context: .
-#    docker:
-#      dockerfile: deployments/docker/Dockerfile
-#      buildArgs:
-#        SVC_NAME: "addsvc"
+build:
+  local: {}
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: hykuan1126/gokitconsul-addsvc
+    context: .
+    docker:
+      dockerfile: deployments/docker/Dockerfile
+      buildArgs:
+        SVC_NAME: "addsvc"
 #  - image: cage1016/gokitconsul-foosvc
 #    context: .
 #    docker:
 #      dockerfile: deployments/docker/Dockerfile
 #      buildArgs:
 #        SVC_NAME: "foosvc"
-#  - image: cage1016/gokitconsul-gateway
-#    context: .
-#    docker:
-#      dockerfile: deployments/docker/Dockerfile
-#      buildArgs:
-#        SVC_NAME: "gateway"
+  - image: hykuan1126/gokitconsul-gateway
+    context: .
+    docker:
+      dockerfile: deployments/docker/Dockerfile
+      buildArgs:
+        SVC_NAME: "gateway"
 #  - image: fluentd
 #    context: ./deployments/docker/fluentd
 #    docker:
@@ -29,5 +32,6 @@ deploy:
     releases:
     - name: gokitconsul-helm
       chartPath: deployments/helm/gokitconsul
-      # values:
-      #   dashfluxImage: <same-as-build-artifact>  # ex. hykuan1126/mainflux-dashflux
+      values:
+        addsvcImage: hykuan1126/gokitconsul-addsvc
+        gatewayImage: hykuan1126/gokitconsul-gateway

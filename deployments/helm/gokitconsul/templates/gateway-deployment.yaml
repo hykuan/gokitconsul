@@ -40,7 +40,7 @@ spec:
           value: /ssl/localhost+3-key.pem
         - name: QS_ZIPKIN_V2_URL
           value: http://zipkin:9411/api/v2/spans
-        image: hykuan1126/gokitconsul-gateway:latest
+        image: {{ .Values.gatewayImage }}
         name: gokitconsul-gateway
         ports:
         - containerPort: 8000
