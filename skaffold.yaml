@@ -33,5 +33,5 @@ deploy:
     - name: gokitconsul-helm
       chartPath: deployments/helm/gokitconsul
       values:
-        addsvcImage: hykuan1126/gokitconsul-addsvc
-        gatewayImage: hykuan1126/gokitconsul-gateway
+        addsvc.image: hykuan1126/gokitconsul-addsvc
+        gateway.image: hykuan1126/gokitconsul-gateway
