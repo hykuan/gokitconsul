@@ -1,28 +1,28 @@
 apiVersion: skaffold/v1alpha4
 kind: Config
-build:
-  local: {}
-  tagPolicy:
-    sha256: {}
-  artifacts:
-  - image: hykuan1126/gokitconsul-addsvc
-    context: .
-    docker:
-      dockerfile: deployments/docker/Dockerfile
-      buildArgs:
-        SVC_NAME: "addsvc"
+#build:
+#  local: {}
+#  tagPolicy:
+#    sha256: {}
+#  artifacts:
+#  - image: hykuan1126/gokitconsul-addsvc
+#    context: .
+#    docker:
+#      dockerfile: deployments/docker/Dockerfile
+#      buildArgs:
+#        SVC_NAME: "addsvc"
 #  - image: cage1016/gokitconsul-foosvc
 #    context: .
 #    docker:
 #      dockerfile: deployments/docker/Dockerfile
 #      buildArgs:
 #        SVC_NAME: "foosvc"
-  - image: hykuan1126/gokitconsul-gateway
-    context: .
-    docker:
-      dockerfile: deployments/docker/Dockerfile
-      buildArgs:
-        SVC_NAME: "gateway"
+#  - image: hykuan1126/gokitconsul-gateway
+#    context: .
+#    docker:
+#      dockerfile: deployments/docker/Dockerfile
+#      buildArgs:
+#        SVC_NAME: "gateway"
 #  - image: fluentd
 #    context: ./deployments/docker/fluentd
 #    docker:
@@ -32,6 +32,6 @@ deploy:
     releases:
     - name: gokitconsul-helm
       chartPath: deployments/helm/gokitconsul
-      values:
-        addsvc.image: hykuan1126/gokitconsul-addsvc
-        gateway.image: hykuan1126/gokitconsul-gateway
+#      values:
+#        addsvc.image: hykuan1126/gokitconsul-addsvc
+#        gateway.image: hykuan1126/gokitconsul-gateway

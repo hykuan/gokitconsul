@@ -12,11 +12,11 @@ define compile_service
 endef
 
 define make_docker
-	docker build --no-cache --build-arg SVC_NAME=$(subst docker_,,$(1)) --tag=cage1016/gokitconsul-$(subst docker_,,$(1)) -f deployments/docker/Dockerfile .
+	docker build --no-cache --build-arg SVC_NAME=$(subst docker_,,$(1)) --tag=hykuan1126/gokitconsul-$(subst docker_,,$(1)) -f deployments/docker/Dockerfile .
 endef
 
 define make_docker_dev
-	docker build --build-arg SVC_NAME=$(subst docker_dev_,,$(1)) --tag=cage1016/gokitconsul-$(subst docker_dev_,,$(1)) -f deployments/docker/Dockerfile.dev ./build
+	docker build --build-arg SVC_NAME=$(subst docker_dev_,,$(1)) --tag=hykuan1126/gokitconsul-$(subst docker_dev_,,$(1)) -f deployments/docker/Dockerfile.dev ./build
 endef
 
 all: $(SERVICES)

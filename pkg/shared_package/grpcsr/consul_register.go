@@ -60,6 +60,7 @@ func (r *ConsulRegister) NewConsulGRPCRegister() (*consulsd.Registrar, error) {
 			GRPC:                           fmt.Sprintf("%v:%v/%v", IP, r.ServicePort, r.ServiceName),
 			DeregisterCriticalServiceAfter: r.DeregisterCriticalServiceAfter.String(),
 		},
+		Connect: &api.AgentServiceConnect{Native: true},
 	}
 	return consulsd.NewRegistrar(client, reg, r.logger), nil
 }

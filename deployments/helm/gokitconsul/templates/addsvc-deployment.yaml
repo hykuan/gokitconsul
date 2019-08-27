@@ -16,6 +16,11 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.service: addsvc
+      annotations:
+        "consul.hashicorp.com/connect-inject": "true"
+        "consul.hashicorp.com/connect-service": "gokitconsul-addsvc"
+        "consul.hashicorp.com/connect-service-port": "8021"
+        "consul.hashicorp.com/connect-service-protocol": "grpc"
     spec:
       containers:
       - env:
@@ -26,7 +31,7 @@ spec:
         - name: QS_ADDSVC_LOG_LEVEL
           value: info
         - name: QS_CONSULT_HOST
-          value: consul
+          value: peeking-coral-consul-server
         - name: QS_CONSULT_PORT
           value: "8500"
         - name: QS_ZIPKIN_V2_URL

@@ -29,16 +29,16 @@ import (
 	"sourcegraph.com/sourcegraph/appdash"
 	appdashot "sourcegraph.com/sourcegraph/appdash/opentracing"
 
-	pb "github.com/cage1016/gokitconsul/pb/foosvc"
+	"github.com/cage1016/gokitconsul/pb/foosvc"
 	addsvctransports "github.com/cage1016/gokitconsul/pkg/addsvc/transports"
 	"github.com/cage1016/gokitconsul/pkg/foosvc/endpoints"
 	"github.com/cage1016/gokitconsul/pkg/foosvc/service"
 	"github.com/cage1016/gokitconsul/pkg/foosvc/transports"
-	"github.com/cage1016/gokitconsul/pkg/shared_package/grpclb"
 	"github.com/cage1016/gokitconsul/pkg/shared_package/grpcsr"
 )
 
 const (
+	defAddsvcURL      string = ""
 	defConsulHost     string = ""
 	defConsulPort     string = ""
 	defZipkinV1URL    string = ""
@@ -55,6 +55,7 @@ const (
 	defServerKey      string = ""
 	defClientTLS      string = "false"
 	defCACerts        string = ""
+	envAddsvcURL      string = "QS_ADDSVC_URL"
 	envConsulHost     string = "QS_CONSULT_HOST"
 	envConsultPort    string = "QS_CONSULT_PORT"
 	envZipkinV1URL    string = "QS_ZIPKIN_V1_URL"
@@ -90,6 +91,7 @@ type config struct {
 	zipkinV2URL    string `json:"zipkin_v2url"`
 	lightstepToken string `json:"lightstep_token"`
 	appdashAddr    string `json:"appdash_addr"`
+	addsvcURL      string `json:"addsvc_url"`
 }
 
 // Env reads specified environment variable. If no value has been found,
@@ -136,12 +138,9 @@ func main() {
 
 	// addsvc grpc connection
 	var conn *grpc.ClientConn
-	{
-		if cfg.consulHost != "" && cfg.consultPort != "" {
-			consulAddres := fmt.Sprintf("%s:%s", cfg.consulHost, cfg.consultPort)
-			conn = connectToAddsvc(consulAddres, "grpc.health.v1.addsvc", logger)
-			defer conn.Close()
-		}
+	if cfg.addsvcURL != "" {
+		conn = connectToAddsvc(cfg.addsvcURL, "grpc.health.v1.addsvc", logger)
+		defer conn.Close()
 	}
 
 	errs := make(chan error, 2)
@@ -181,6 +180,7 @@ func loadConfig(logger log.Logger) (cfg config) {
 	cfg.zipkinV2URL = env(envZipkinV2URL, defZipkinV2URL)
 	cfg.lightstepToken = env(envLightstepToken, defLightstepToken)
 	cfg.appdashAddr = env(envAppdashAddr, defAppdashAddr)
+	cfg.addsvcURL = env(envAddsvcURL, defAddsvcURL)
 	return cfg
 }
 
@@ -263,11 +263,11 @@ func NewServer(cfg config, conn *grpc.ClientConn, logger log.Logger) (pb.FoosvcS
 	return grpcServer, httpHandler
 }
 
-func connectToAddsvc(consulAddres, svcName string, logger log.Logger) *grpc.ClientConn {
+func connectToAddsvc(addres, svcName string, logger log.Logger) *grpc.ClientConn {
 	conn, err := grpc.Dial(
-		"",
+		addres,
 		grpc.WithInsecure(),
-		// 开启 grpc 中间件的重试功能
+		//开启 grpc 中间件的重试功能
 		grpc.WithUnaryInterceptor(
 			grpc_retry.UnaryClientInterceptor(
 				grpc_retry.WithBackoff(grpc_retry.BackoffLinear(time.Duration(1)*time.Millisecond)),      // 重试间隔时间
@@ -276,10 +276,10 @@ func connectToAddsvc(consulAddres, svcName string, logger log.Logger) *grpc.Clie
 				grpc_retry.WithCodes(codes.ResourceExhausted, codes.Unavailable, codes.DeadlineExceeded), // 返回码为如下值时重试
 			),
 		),
-		// 负载均衡，使用 consul 作服务发现
-		grpc.WithBalancer(grpc.RoundRobin(grpclb.NewConsulResolver(
-			consulAddres, svcName,
-		))),
+		//// 负载均衡，使用 consul 作服务发现
+		//grpc.WithBalancer(grpc.RoundRobin(grpclb.NewConsulResolver(
+		//	addres, svcName,
+		//))),
 	)
 	if err != nil {
 		level.Error(logger).Log("serviceName", svcName, "error", err)

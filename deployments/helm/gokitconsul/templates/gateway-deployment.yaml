@@ -17,11 +17,13 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.service: gateway
+      annotations:
+        "consul.hashicorp.com/connect-inject": "true"
     spec:
       containers:
       - env:
         - name: QS_CONSULT_HOST
-          value: consul
+          value: peeking-coral-consul-server
         - name: QS_CONSULT_PORT
           value: "8500"
         - name: QS_GATEWAY_GRPC_PORT
